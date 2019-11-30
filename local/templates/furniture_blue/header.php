@@ -96,33 +96,33 @@ $APPLICATION->IncludeFile(
 		<div id="content">
 		
 			<div id="sidebar">
-<?$APPLICATION->IncludeComponent("bitrix:menu", "left", array(
-	"ROOT_MENU_TYPE" => "left",
-	"MENU_CACHE_TYPE" => "A",
-	"MENU_CACHE_TIME" => "36000000",
-	"MENU_CACHE_USE_GROUPS" => "Y",
-	"MENU_CACHE_GET_VARS" => array(
-	),
-	"MAX_LEVEL" => "1",
-	"CHILD_MENU_TYPE" => "left",
-	"USE_EXT" => "Y",
-	"ALLOW_MULTI_SELECT" => "N"
-	),
-	false,
-	array(
-		"ACTIVE_COMPONENT" => "Y"
-	)
-);?>
+                <?$APPLICATION->IncludeComponent("bitrix:menu", "left", array(
+                    "ROOT_MENU_TYPE" => "left",
+                    "MENU_CACHE_TYPE" => "A",
+                    "MENU_CACHE_TIME" => "36000000",
+                    "MENU_CACHE_USE_GROUPS" => "Y",
+                    "MENU_CACHE_GET_VARS" => array(
+                    ),
+                    "MAX_LEVEL" => "1",
+                    "CHILD_MENU_TYPE" => "left",
+                    "USE_EXT" => "Y",
+                    "ALLOW_MULTI_SELECT" => "N"
+                    ),
+                    false,
+                    array(
+                        "ACTIVE_COMPONENT" => "Y"
+                    )
+                );?>
 				<div class="content-block">
 					<div class="content-block-inner">
 						<h3><?=GetMessage('CFT_NEWS')?></h3>
-<?
-$APPLICATION->IncludeFile(
-	SITE_DIR."include/news.php",
-	Array(),
-	Array("MODE"=>"html")
-);
-?>
+                            <?
+                            $APPLICATION->IncludeFile(
+                                SITE_DIR."include/news.php",
+                                Array(),
+                                Array("MODE"=>"html")
+                            );
+                            ?>
 					</div>
 				</div>
 				
@@ -155,6 +155,21 @@ $APPLICATION->IncludeFile(
 					</div>
 					<div class="bottom"></div>
 				</div>
+
+                <div class="content-block">
+                    <div class="content-block-inner">
+                        <h3><?=GetMessage('CFT_LANG_CANGE')?></h3>
+                        <?$APPLICATION->IncludeComponent(
+                            "bitrix:main.site.selector",
+                            "dropdown",
+                            Array(
+                                "CACHE_TIME" => "3600",
+                                "CACHE_TYPE" => "A",
+                                "SITE_LIST" => array("s1", "s2")
+                            )
+                        );?>
+                    </div>
+                </div>
 			</div>
 		
 			<div id="workarea">
