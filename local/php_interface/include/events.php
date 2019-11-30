@@ -64,21 +64,24 @@ class Test
     function OnBeforeEventAddHandler(&$event, &$lid, &$arFields)
     {
         global $USER;
-        $name = $arFields["AUTHOR"];
-        $mess = "Пользователь не авторизован, данные из формы: $name пользователя";
+        if(!empty($arFields["AUTHOR"]) && isset($arFields["AUTHOR"])) {
+            $name = $arFields["AUTHOR"];
+            $mess = "Пользователь не авторизован, данные из формы: $name пользователя";
 
-        if ($USER->IsAuthorized()) {
-            $rs = CUser::GetById($USER->GetId())->fetch();
 
-            $mess = "Пользователь авторизован: ". $rs["ID"] ." (". $rs["LOGIN"] .") " . $rs["NAME"] .", данные из формы: $name пользователя";
+            if ($USER->IsAuthorized()) {
+                $rs = CUser::GetById($USER->GetId())->fetch();
+
+                $mess = "Пользователь авторизован: ". $rs["ID"] ." (". $rs["LOGIN"] .") " . $rs["NAME"] .", данные из формы: $name пользователя";
+            }
+
+            CEventLog::Add(array(
+                "SEVERITY" => "INFO",
+                "AUDIT_TYPE_ID" => "FEEDBACK",
+                "MODULE_ID" => "main",
+                "DESCRIPTION" => "Замена данных в отсылаемом письме – [$mess]" ,
+            ));
         }
-
-        CEventLog::Add(array(
-            "SEVERITY" => "INFO",
-            "AUDIT_TYPE_ID" => "FEEDBACK",
-            "MODULE_ID" => "main",
-            "DESCRIPTION" => "Замена данных в отсылаемом письме – [$mess]" ,
-        ));
     }
 }
 
