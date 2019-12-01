@@ -1,5 +1,15 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
-<?$ElementID = $APPLICATION->IncludeComponent(
+<?
+$APPLICATION->IncludeComponent(
+    "bitrix:news.list",
+    "jalobs",
+    array(
+        "ELEMENT_ID" => $arResult["VARIABLES"]["ELEMENT_ID"],
+        "JALOBS_AJAX" => $arParams["JALOBS_AJAX"]
+    ),
+    false
+);
+$ElementID = $APPLICATION->IncludeComponent(
 	"bitrix:news.detail",
 	"",
 	Array(
@@ -37,7 +47,8 @@
 		"ELEMENT_CODE" => $arResult["VARIABLES"]["ELEMENT_CODE"],
 		"IBLOCK_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["news"],
 
-        "CANONICAL" => $arParams["CANONICAL"]
+        "CANONICAL" => $arParams["CANONICAL"],
+        "JALOBS_AJAX" => $arParams["JALOBS_AJAX"]
 
 	),
 	$component

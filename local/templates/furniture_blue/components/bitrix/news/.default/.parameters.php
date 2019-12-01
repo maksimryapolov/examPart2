@@ -11,6 +11,11 @@ $arTemplateParameters = array(
 		"NAME" => "«ID информационного блока для rel=canonical»",
 		"TYPE" => "STRING",
 	),
+	"JALOBS_AJAX" => Array(
+		"NAME" => "Собирать жалобы в режиме AJAX",
+		"TYPE" => "CHECKBOX",
+		"DEFAULT" => "N"
+	),
 
 );
 ?>

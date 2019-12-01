@@ -1,4 +1,6 @@
 <?php
+
+
 if (!empty($arParams["CANONICAL"]))
 {
     if(CModule::includeModule("iblock"))
@@ -12,6 +14,6 @@ if (!empty($arParams["CANONICAL"]))
         $cp = $this->__component;
         $cp->SetResultCacheKeys(array("CANONICAL"));
     }
-
 }
+
 
