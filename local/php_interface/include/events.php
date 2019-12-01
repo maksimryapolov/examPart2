@@ -27,6 +27,11 @@ class MyClass
                 return false;
             }
         }
+
+        if($arFields["IBLOCK_ID"] == IBLOCK_SERVICES) {
+            // Очищаем кеш по тегу котрому пометили нащ кеш, после обновления инфоблока ID 3
+            $GLOBALS["CACHE_MANAGER"]->ClearByTag("my_exam2_tag_" . IBLOCK_SERVICES);
+        }
     }
 }
 

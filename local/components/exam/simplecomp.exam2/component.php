@@ -45,8 +45,35 @@ if ($_REQUEST["filter"] == "Y") {
     );
 }
 
-if($this->startResultCache(false, array($additional_filter, $arNavigation)))
+//if($this->startResultCache(false, array($additional_filter, $arNavigation)))
+
+/*
+ * [ex2-107] Автоматический сброс кеша в компоненте при изменении элемента информационного блока «Услуги».
+ * Не забыть очистить кеш по тегу в событии
+*/
+
+$cache_time = $arParams["CACHE_TIME"];
+$cache_id = md5(serialize($arParams)); //Создание ID кеша если параметры изменятся $arParams соответственно и ID будет другой и кеш инициализируется другой
+$cache_path = "/exam_cache"; //Папка для хранения кеша относительно /bitrix/cache/
+
+// Создание объекта кеширования
+$obCache = new CPHPCache();
+
+// При нахождении кеша в указанной папке return true
+
+if($obCache->InitCache($cache_time, $cache_id, $cache_path))
 {
+    // Получаем необходимые переменные из кеша
+    $arResult = $obCache->GetVars()["arResult"];
+    // вывод в шаблон
+    $obCache->Output();
+}
+else if($obCache->StartDataCache()) //кеш инициализируется
+{
+    global $CACHE_MANAGER; //Глобальный объект для создания тэг метки кеша
+    $CACHE_MANAGER->StartTagCache($cache_path); //Начало создание метки тега передается путь к кешу
+    $CACHE_MANAGER->RegisterTag("my_exam2_tag_" . IBLOCK_SERVICES); // Сам тег по которому на который будем ориентироваться при сбрасывании
+
 	if(!Loader::includeModule("iblock"))
 	{
 		$this->abortResultCache();
@@ -90,6 +117,7 @@ if($this->startResultCache(false, array($additional_filter, $arNavigation)))
             "NAME" => $resCL->GetFields()["NAME"]
         );
     }
+
     $main_filter = array("IBLOC_ID" => intval(intval($arParams["IBLOCK_ID"])), "ACTIVE" => "Y", "!PROPERTY_FIRMA" => false);
 	if(!empty($additional_filter)) {
         $main_filter[] = $additional_filter;
@@ -137,6 +165,7 @@ if($this->startResultCache(false, array($additional_filter, $arNavigation)))
     );
     // end!
     $prices = array();
+
     while ($resEl = $rsEl->GetNextElement())
     {
         $element = $resEl->GetFields();
@@ -150,9 +179,11 @@ if($this->startResultCache(false, array($additional_filter, $arNavigation)))
 
         $element["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
         $element["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-
-        $myResult[$element["PROPERTY_FIRMA_VALUE"]]["ITEMS"][] = $element;
-        $prices[] = $element["PROPERTY_PRICE_VALUE"];
+        if($myResult[$element["PROPERTY_FIRMA_VALUE"]])
+        {
+            $myResult[$element["PROPERTY_FIRMA_VALUE"]]["ITEMS"][] = $element;
+            $prices[] = $element["PROPERTY_PRICE_VALUE"];
+        }
     }
 
     $arResult["MAX_PRICE"] = max($prices);
@@ -162,4 +193,9 @@ if($this->startResultCache(false, array($additional_filter, $arNavigation)))
 	$this->setResultCacheKeys(array("RESULT"));
 	$this->includeComponentTemplate();
 	$APPLICATION->SetTitle("Разделов: $count");
+    $CACHE_MANAGER->EndTagCache(); // Конец метки тега кеша
+    // завершение кешируемой области сохраним все необходимые переменные
+	$obCache->EndDataCache(array(
+        "arResult" => $arResult
+    ));
 }
