@@ -6,3 +6,4 @@ define("MENU_ADMIN_IBLOCK", 'iblock_import');
 define("GROUP_ADMINS", 1);
 define("IBLOCK_JALOBS", 8);
 define("IBLOCK_SERVICES", 3);
+define("IBLOCK_PRODUCT", 2);

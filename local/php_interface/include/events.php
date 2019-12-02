@@ -6,7 +6,7 @@ class MyClass
 {
     function OnBeforeIBlockElementUpdateHandler(&$arFields)
     {
-        if(CModule::includeModule("iblock")) {
+        if(CModule::includeModule("iblock") && $arFields["IBLOCK_ID"] == IBLOCK_PRODUCT) {
             $count = 0;
             $filter = array(
                 "ACTIVE" => "Y",
@@ -91,23 +91,53 @@ class Test
 }
 
 // Убрать рабочий стол в админ панели
-AddEventHandler('main', 'OnBuildGlobalMenu', 'ASDFavoriteOnBuildGlobalMenu');
-function ASDFavoriteOnBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
+//AddEventHandler('main', 'OnBuildGlobalMenu', 'ASDFavoriteOnBuildGlobalMenu');
+//function ASDFavoriteOnBuildGlobalMenu(&$aGlobalMenu, &$aModuleMenu)
+//{
+//    global $USER;
+//
+//    $rs_group = CUser::GetUserGroup($USER->GetId());
+//
+//    if(in_array(ID_GROUP_CONTENT, $rs_group))
+//    {
+//        foreach($aModuleMenu as $key => $item) {
+//            foreach ($item['items'] as $el) {
+//                if($el['items_id'] == MENU_ADMIN_IBLOCK) {
+//                    unset($aModuleMenu[$key]);
+//                    break;
+//                }
+//            }
+//        }
+//        unset($aGlobalMenu["global_menu_desktop"]);
+//    }
+//}
+
+AddEventHandler('main', "OnBuildGlobalMenu", 'test');
+
+function test(&$param1, &$param2)
 {
-    global $USER;
+    $globalMenu = "global_menu_content";
+    $subMenus = "menu_iblock_/news";
+    $subMenuItem = "menu_iblock_/news";
 
-    $rs_group = CUser::GetUserGroup($USER->GetId());
-
-    if(in_array(ID_GROUP_CONTENT, $rs_group))
+    foreach ($param2 as $subKey => $subMenu)
     {
-        foreach($aModuleMenu as $key => $item) {
-            foreach ($item['items'] as $el) {
-                if($el['items_id'] == MENU_ADMIN_IBLOCK) {
-                    unset($aModuleMenu[$key]);
-                    break;
+        if($subMenu["parent_menu"] == $globalMenu && $subMenu["items_id"] == $subMenus) {
+            foreach ($subMenu["items"] as $key => $el) {
+                if($el["items_id"] != $subMenuItem) {
+                    unset($param2[$subKey]["items"][$key]);
                 }
             }
+        } else {
+            unset($param2[$subKey]);
         }
-        unset($aGlobalMenu["global_menu_desktop"]);
     }
+
+    foreach($param1 as $key => $menu)
+    {
+        if($key != $globalMenu) {
+            unset($param1[$key]);
+        }
+    }
+    // echo "<pre>";var_dump($param1,$param2 );echo "</pre>";
 }
