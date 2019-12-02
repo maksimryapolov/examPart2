@@ -118,7 +118,7 @@ function test(&$param1, &$param2)
 {
     $globalMenu = "global_menu_content";
     $subMenus = "menu_iblock_/news";
-    $subMenuItem = "menu_iblock_/news";
+    $subMenuItem = "menu_iblock_/news/1";
 
     foreach ($param2 as $subKey => $subMenu)
     {
