@@ -125,18 +125,18 @@ function test(&$param1, &$param2)
         if($subMenu["parent_menu"] == $globalMenu && $subMenu["items_id"] == $subMenus) {
             foreach ($subMenu["items"] as $key => $el) {
                 if($el["items_id"] != $subMenuItem) {
-                    unset($param2[$subKey]["items"][$key]);
+                    //unset($param2[$subKey]["items"][$key]);
                 }
             }
         } else {
-            unset($param2[$subKey]);
+            //unset($param2[$subKey]);
         }
     }
 
     foreach($param1 as $key => $menu)
     {
         if($key != $globalMenu) {
-            unset($param1[$key]);
+            //unset($param1[$key]);
         }
     }
     // echo "<pre>";var_dump($param1,$param2 );echo "</pre>";
